@@ -1,14 +1,44 @@
-import os
+iimport os
+import json
 import numpy as np
 import pandas as pd
 from scipy.stats import poisson
 from google.cloud import bigquery
-from dotenv import load_dotenv
+from google.oauth2 import service_account
 from collections import defaultdict
 import warnings
 warnings.filterwarnings('ignore')
 
-load_dotenv()
+# ── Connect to BigQuery ───────────────────────────────────────────────────────
+def get_client():
+    try:
+        import streamlit as st
+        if "GCP_CREDENTIALS" in st.secrets:
+            credentials_info = json.loads(st.secrets["GCP_CREDENTIALS"])
+            credentials = service_account.Credentials.from_service_account_info(
+                credentials_info
+            )
+            return bigquery.Client(
+                credentials=credentials,
+                project="gold-north-america"
+            )
+    except Exception:
+        pass
+    # Local fallback
+    key_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    return bigquery.Client.from_service_account_json(
+        key_path, project="gold-north-america"
+    )
+
+# ── Load fixtures ─────────────────────────────────────────────────────────────
+def load_fixtures():
+    client = get_client()
+    query = """
+        SELECT *
+        FROM `gold-north-america.gold_north_america.mart_group_fixtures_enriched`
+        ORDER BY date, group_name
+    """
+    return client.query(query).to_dataframe()
 
 # ── Connect to BigQuery ───────────────────────────────────────────────────────
 key_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
