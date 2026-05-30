@@ -6,3 +6,6 @@ __pycache__/
 *.pyc
 .dbt/
 logs/
+dbt_project/target/
+data/raw/
+data/raw/.gitkeep
