@@ -25,6 +25,7 @@ against weak regional opposition.
 
 ### Match Simulation
 Expected goals (λ) for each fixture are calculated as:
+
 λ_home = home_attack × away_defence × avg_attack × home_squad_multiplier
 λ_away = away_attack × home_defence × avg_attack × away_squad_multiplier
 
