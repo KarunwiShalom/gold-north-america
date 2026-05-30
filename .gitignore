@@ -1,0 +1,8 @@
+venv/
+.env
+.secrets/
+.DS_Store
+__pycache__/
+*.pyc
+.dbt/
+logs/

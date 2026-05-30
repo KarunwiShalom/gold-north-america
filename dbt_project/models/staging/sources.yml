@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: raw
+    database: gold-north-america
+    schema: gold_north_america
+    tables:
+      - name: results
+      - name: goalscorers
+      - name: shootouts
+      - name: former_names
+      - name: fifa_rankings
+      - name: squad_quality
