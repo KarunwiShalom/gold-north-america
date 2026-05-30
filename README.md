@@ -26,8 +26,9 @@ against weak regional opposition.
 ### Match Simulation
 Expected goals (λ) for each fixture are calculated as:
 
-λ_home = home_attack × away_defence × avg_attack × home_squad_multiplier
-λ_away = away_attack × home_defence × avg_attack × away_squad_multiplier
+1. λ_home = home_attack × away_defence × avg_attack × home_squad_multiplier
+
+2. λ_away = away_attack × home_defence × avg_attack × away_squad_multiplier
 
 Scoreline probabilities are drawn from a Poisson distribution. Win/draw/loss 
 probabilities are derived from the full scoreline matrix.
