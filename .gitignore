@@ -9,3 +9,4 @@ logs/
 dbt_project/target/
 data/raw/
 data/raw/.gitkeep
+.streamlit/secrets.toml

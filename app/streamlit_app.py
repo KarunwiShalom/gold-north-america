@@ -1,16 +1,15 @@
 import os
+import json
 import streamlit as st
 import pandas as pd
 import numpy as np
 from scipy.stats import poisson
 from google.cloud import bigquery
-from dotenv import load_dotenv
+from google.oauth2 import service_account
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from model.monte_carlo import run_monte_carlo, load_fixtures
 from streamlit_extras.let_it_rain import rain
-
-load_dotenv()
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -36,10 +35,22 @@ rain(
 # ── Connect to BigQuery ───────────────────────────────────────────────────────
 @st.cache_resource
 def get_client():
-    key_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-    return bigquery.Client.from_service_account_json(
-        key_path, project="gold-north-america"
-    )
+    if "GCP_CREDENTIALS" in st.secrets:
+        # Streamlit Cloud: credentials injected as secret
+        credentials_info = json.loads(st.secrets["GCP_CREDENTIALS"])
+        credentials = service_account.Credentials.from_service_account_info(
+            credentials_info
+        )
+        return bigquery.Client(
+            credentials=credentials,
+            project="gold-north-america"
+        )
+    else:
+        # Local: fall back to key file
+        key_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+        return bigquery.Client.from_service_account_json(
+            key_path, project="gold-north-america"
+        )
 
 @st.cache_data(ttl=3600)
 def load_fixture_data():
