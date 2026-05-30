@@ -205,7 +205,7 @@ with tab1:
                 'quarter_pct': '{:.2f}%',
                 'r16_pct':     '{:.2f}%',
             }),
-            use_container_width=True,
+            width='stretch',
             height=600
         )
 
@@ -383,5 +383,5 @@ with tab3:
             matrix_df.style.background_gradient(
                 cmap='YlOrRd'
             ).format("{:.2f}%"),
-            use_container_width=True
+            width='stretch'
         )
