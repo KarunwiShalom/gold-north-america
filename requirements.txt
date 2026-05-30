@@ -6,3 +6,4 @@ google-auth
 db-dtypes
 streamlit-extras
 python-dotenv
+matplotlib
