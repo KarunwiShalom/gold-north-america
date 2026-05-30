@@ -215,7 +215,7 @@ with tab2:
 
     st.markdown("<p style='color:rgba(255,255,255,0.7); font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;'>Filter by Group</p>", unsafe_allow_html=True)
     groups = sorted(fixtures_df['group_name'].unique())
-    selected_group = st.selectbox("", ["All Groups"] + list(groups))
+    selected_group = st.selectbox("Group", ["All Groups"] + list(groups), label_visibility="collapsed")
 
     if selected_group != "All Groups":
         filtered = fixtures_df[fixtures_df['group_name'] == selected_group]
