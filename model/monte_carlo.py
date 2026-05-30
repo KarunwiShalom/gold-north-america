@@ -24,7 +24,6 @@ def get_client():
             )
     except Exception:
         pass
-    # Local fallback
     key_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
     return bigquery.Client.from_service_account_json(
         key_path, project="gold-north-america"
