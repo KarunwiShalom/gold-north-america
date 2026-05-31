@@ -1,5 +1,3 @@
-version: 2
-
 sources:
   - name: raw
     database: gold-north-america
@@ -11,3 +9,5 @@ sources:
       - name: former_names
       - name: fifa_rankings
       - name: squad_quality
+      - name: predictions_group_stage
+      - name: actual_results

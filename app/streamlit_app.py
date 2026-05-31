@@ -9,7 +9,6 @@ from google.oauth2 import service_account
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from model.monte_carlo import run_monte_carlo, load_fixtures
-from streamlit_extras.let_it_rain import rain
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -23,14 +22,6 @@ st.set_page_config(
 # Load CSS
 with open("app/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
-# ── Confetti function ─────────────────────────────────────────────────────────
-rain(
-    emoji="🎉",
-    font_size=30,
-    falling_speed=5,
-    animation_length=3,
-)
 
 # ── Connect to BigQuery ───────────────────────────────────────────────────────
 @st.cache_resource
@@ -140,10 +131,11 @@ st.markdown(f"""
 
 
 # ── Tabs ──────────────────────────────────────────────────────────────────────
-tab1, tab2, tab3 = st.tabs([
+tab1, tab2, tab3, tab4 = st.tabs([
     "🏆 Tournament Predictions",
     "👥 Group Stage",
-    "⚔️ Head to Head"
+    "⚔️ Head to Head",
+    "📊 Accuracy Tracker"
 ])
 
 # ── Tab 1: Tournament Predictions ────────────────────────────────────────────
@@ -384,4 +376,119 @@ with tab3:
                 cmap='YlOrRd'
             ).format("{:.2f}%"),
             width='stretch'
+        )
+
+        # ── Tab 4: Accuracy Tracker ───────────────────────────────────────────────────
+with tab4:
+    st.header("Model Accuracy Tracker")
+    st.markdown("<p style='color:rgba(255,255,255,0.7); font-size:0.9rem;'>How well is the model predicting results? Updates after each matchday.</p>", unsafe_allow_html=True)
+
+    @st.cache_data(ttl=3600)
+    def load_accuracy_data():
+        client = get_client()
+        query = """
+            SELECT *
+            FROM `gold-north-america.gold_north_america.mart_prediction_accuracy`
+            ORDER BY date, group_name
+        """
+        return client.query(query).to_dataframe()
+
+    accuracy_df = load_accuracy_data()
+
+    if accuracy_df.empty:
+        st.markdown("""
+        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+                    border-radius:16px; padding:48px; text-align:center; margin-top:24px;">
+            <div style="font-size:3rem; margin-bottom:16px;">⏳</div>
+            <div style="color:#FFFFFF; font-size:1.4rem; font-weight:700; margin-bottom:8px;">
+                Waiting for kickoff</div>
+            <div style="color:rgba(255,255,255,0.6); font-size:0.9rem;">
+                The tournament begins June 11. Check back after the first matches 
+                to see how the model is performing.</div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        # ── Summary metrics ───────────────────────────────────────────────────
+        total = len(accuracy_df)
+        correct = accuracy_df['correct_outcome'].sum()
+        accuracy_pct = round(correct / total * 100, 1)
+        avg_brier = round(accuracy_df['brier_score'].mean(), 4)
+        matchdays_played = accuracy_df['date'].nunique()
+
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.markdown(f"""
+            <div style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.25);
+                        border-left:4px solid #f5c518; border-radius:12px; padding:20px 24px;">
+                <div style="color:rgba(255,255,255,0.6); font-size:0.72rem; font-weight:700;
+                            letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px;">
+                    Matches Tracked</div>
+                <div style="color:#FFFFFF; font-size:1.75rem; font-weight:800;">{total}</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with col2:
+            st.markdown(f"""
+            <div style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.25);
+                        border-left:4px solid #2A9D8F; border-radius:12px; padding:20px 24px;">
+                <div style="color:rgba(255,255,255,0.6); font-size:0.72rem; font-weight:700;
+                            letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px;">
+                    Correct Outcomes</div>
+                <div style="color:#FFFFFF; font-size:1.75rem; font-weight:800;">{accuracy_pct}%</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with col3:
+            st.markdown(f"""
+            <div style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.25);
+                        border-left:4px solid #E63946; border-radius:12px; padding:20px 24px;">
+                <div style="color:rgba(255,255,255,0.6); font-size:0.72rem; font-weight:700;
+                            letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px;">
+                    Brier Score</div>
+                <div style="color:#FFFFFF; font-size:1.75rem; font-weight:800;">{avg_brier}</div>
+                <div style="color:rgba(255,255,255,0.4); font-size:0.72rem;">0 = perfect · 0.33 = random</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with col4:
+            st.markdown(f"""
+            <div style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.25);
+                        border-left:4px solid #457B9D; border-radius:12px; padding:20px 24px;">
+                <div style="color:rgba(255,255,255,0.6); font-size:0.72rem; font-weight:700;
+                            letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px;">
+                    Matchdays</div>
+                <div style="color:#FFFFFF; font-size:1.75rem; font-weight:800;">{matchdays_played}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown("---")
+
+        # ── Match by match table ──────────────────────────────────────────────
+        st.subheader("Match by Match")
+        display_df = accuracy_df[[
+            'date', 'group_name', 'home_team', 'away_team',
+            'predicted_outcome', 'actual_outcome', 'correct_outcome',
+            'prob_home_win', 'prob_draw', 'prob_away_win', 'brier_score'
+        ]].copy()
+
+        display_df['result'] = display_df.apply(
+            lambda r: f"{int(r['home_goals'])}–{int(r['away_goals'])}"
+            if 'home_goals' in accuracy_df.columns else "", axis=1
+        )
+        display_df['✓'] = display_df['correct_outcome'].apply(
+            lambda x: "✅" if x == 1 else "❌"
+        )
+
+        st.dataframe(
+            display_df[[
+                'date', 'group_name', 'home_team', 'away_team',
+                'predicted_outcome', 'actual_outcome', '✓', 'brier_score'
+            ]].rename(columns={
+                'date': 'Date',
+                'group_name': 'Group',
+                'home_team': 'Home',
+                'away_team': 'Away',
+                'predicted_outcome': 'Predicted',
+                'actual_outcome': 'Actual',
+                'brier_score': 'Brier'
+            }),
+            width='stretch',
+            height=500
         )
