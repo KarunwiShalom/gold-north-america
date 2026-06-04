@@ -279,7 +279,3 @@ hr {
     0%, 100% { transform: translateY(0); }
     50%       { transform: translateY(3px); }
 }
-
-#root > div:nth-child(1) > div > div > div > div > section > div {
-    padding-top: 0rem;
-}
