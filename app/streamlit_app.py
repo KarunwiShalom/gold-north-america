@@ -144,70 +144,70 @@ with tab1:
     st.markdown("<p style='color:rgba(255,255,255,0.7); font-size:0.9rem;'>Based on 10,000 Monte Carlo simulations across all 48 teams.</p>", unsafe_allow_html=True)
     card_css = """
     <style>
-    .gna-grid {
+    .wc26-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 12px;
         margin-bottom: 0.5rem;
     }
-    .gna-card {
-        background: rgba(255,255,255,0.04);
+    .wc26-card {
+        background: rgba(180, 122, 26, 0.08);
         padding: 1.5rem 1.25rem;
         border-radius: 12px;
-        border: 0.5px solid rgba(255,255,255,0.1);
+        border: 0.5px solid rgba(180, 122, 26, 0.2);
         box-shadow: inset 0 2px 6px rgba(0,0,0,0.18), inset 0 1px 2px rgba(0,0,0,0.1);
-        transition: box-shadow 0.15s;
     }
-    .gna-card.featured {
+    .wc26-card.featured {
+        background: rgba(180, 122, 26, 0.12);
         box-shadow: inset 0 2px 8px rgba(0,0,0,0.22), inset 0 1px 3px rgba(0,0,0,0.12),
-                    inset 0 0 0 1px rgba(180,122,26,0.2);
+                    inset 0 0 0 1px rgba(180,122,26,0.3);
     }
-    .gna-rank {
+    .wc26-rank {
         font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
         color: rgba(255,255,255,0.35); margin-bottom: 0.75rem;
         display: flex; align-items: center; gap: 8px;
     }
-    .gna-rank-line { flex: 1; height: 0.5px; background: rgba(255,255,255,0.1); }
-    .gna-tag {
+    .wc26-rank-line { flex: 1; height: 0.5px; background: rgba(255,255,255,0.1); }
+    .wc26-tag {
         display: inline-block; font-size: 10px; letter-spacing: 0.08em;
         text-transform: uppercase; padding: 2px 8px; border-radius: 3px;
         border: 0.5px solid; margin-bottom: 0.5rem;
     }
-    .gna-tag.featured { border-color: #C8952A; color: #C8952A; }
-    .gna-tag.muted { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.35); }
-    .gna-team {
+    .wc26-tag.featured { border-color: #C8952A; color: #C8952A; }
+    .wc26-tag.muted { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.35); }
+    .wc26-team {
         font-family: Georgia, serif;
         font-size: 26px; line-height: 1.1;
         color: #fff; margin: 0 0 0.25rem;
     }
-    .gna-team em { font-style: normal; color: #C8952A; }
-    .gna-divider { height: 2px; width: 24px; border-radius: 1px; margin: 1rem 0 0.75rem; }
-    .gna-win-pct { font-size: 28px; font-weight: 500; color: #fff; line-height: 1; }
-    .gna-win-pct em { font-style: normal; color: #C8952A; }
-    .gna-win-label {
+    .wc26-team em { font-style: normal; color: #C8952A; }
+    .wc26-divider { height: 2px; width: 24px; border-radius: 1px; margin: 1rem 0 0.75rem; }
+    .wc26-win-pct { font-size: 28px; font-weight: 500; color: #fff; line-height: 1; }
+    .wc26-win-pct em { font-style: normal; color: #C8952A; }
+    .wc26-win-label {
         font-size: 11px; color: rgba(255,255,255,0.4);
         letter-spacing: 0.06em; margin-top: 2px;
     }
-    .gna-stats { margin-top: 1rem; display: flex; flex-direction: column; gap: 5px; }
-    .gna-stat { display: flex; justify-content: space-between; font-size: 12px; }
-    .gna-stat-key { color: rgba(255,255,255,0.4); }
-    .gna-stat-val { color: rgba(255,255,255,0.85); }
-    .gna-scroll-nudge {
+    .wc26-stats { margin-top: 1rem; display: flex; flex-direction: column; gap: 5px; }
+    .wc26-stat { display: flex; justify-content: space-between; font-size: 12px; }
+    .wc26-stat-key { color: rgba(255,255,255,0.4); }
+    .wc26-stat-val { color: rgba(255,255,255,0.85); }
+    .wc26-scroll-nudge {
         display: flex; flex-direction: column; align-items: center;
         gap: 4px; margin-top: 1.5rem; opacity: 0.4;
     }
-    .gna-nudge-label {
+    .wc26-nudge-label {
         font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
         color: rgba(255,255,255,0.5);
     }
-    .gna-nudge-arrow {
+    .wc26-nudge-arrow {
         width: 28px; height: 28px; border-radius: 50%;
         border: 0.5px solid rgba(255,255,255,0.2);
         display: flex; align-items: center; justify-content: center;
         font-size: 13px; color: rgba(255,255,255,0.5);
-        animation: gna-bob 1.8s ease-in-out infinite;
+        animation: wc26-bob 1.8s ease-in-out infinite;
     }
-    @keyframes gna-bob {
+    @keyframes wc26-bob {
         0%, 100% { transform: translateY(0); }
         50%       { transform: translateY(3px); }
     }
@@ -221,49 +221,41 @@ with tab1:
         split = max(len(name) - 3, 2)
         return f"{name[:split]}<em>{name[split:]}</em>"
 
-    cards_html = '<div class="gna-grid">'
+    card_blocks = []
     for i in range(3):
-        row      = mc_results.iloc[i]
-        featured = "featured" if i == 0 else ""
-        tag_cls  = "featured" if i == 0 else "muted"
+        row       = mc_results.iloc[i]
+        featured  = "featured" if i == 0 else ""
+        tag_cls   = "featured" if i == 0 else "muted"
         divider_bg = "#C8952A" if i == 0 else "rgba(255,255,255,0.15)"
-        win_open   = "<em>" if i == 0 else ""
-        win_close  = "</em>" if i == 0 else ""
+        win_open  = "<em>" if i == 0 else ""
+        win_close = "</em>" if i == 0 else ""
+        team_html = split_team(row['team'])
 
-        cards_html += f"""
-        <div class="gna-card {featured}">
-            <div class="gna-rank"><span>{ranks[i]}</span><span class="gna-rank-line"></span></div>
-            <span class="gna-tag {tag_cls}">{tags[i]}</span>
-            <p class="gna-team">{split_team(row['team'])}</p>
-            <div class="gna-divider" style="background:{divider_bg};"></div>
-            <div class="gna-win-pct">{win_open}{row['win_pct']:.2f}%{win_close}</div>
-            <p class="gna-win-label">chance to win</p>
-            <div class="gna-stats">
-                <div class="gna-stat"><span class="gna-stat-key">Final</span><span class="gna-stat-val">{row['final_pct']:.2f}%</span></div>
-                <div class="gna-stat"><span class="gna-stat-key">Semi</span><span class="gna-stat-val">{row['semi_pct']:.2f}%</span></div>
-                <div class="gna-stat"><span class="gna-stat-key">Quarter</span><span class="gna-stat-val">{row['quarter_pct']:.2f}%</span></div>
-            </div>
-        </div>
-        """
-    cards_html += "</div>"
+        card_blocks.append(
+            f'<div class="wc26-card {featured}">'
+            f'<div class="wc26-rank"><span>{ranks[i]}</span><span class="wc26-rank-line"></span></div>'
+            f'<span class="wc26-tag {tag_cls}">{tags[i]}</span>'
+            f'<p class="wc26-team">{team_html}</p>'
+            f'<div class="wc26-divider" style="background:{divider_bg};"></div>'
+            f'<div class="wc26-win-pct">{win_open}{row["win_pct"]:.2f}%{win_close}</div>'
+            f'<p class="wc26-win-label">chance to win</p>'
+            f'<div class="wc26-stats">'
+            f'<div class="wc26-stat"><span class="wc26-stat-key">Final</span><span class="wc26-stat-val">{row["final_pct"]:.2f}%</span></div>'
+            f'<div class="wc26-stat"><span class="wc26-stat-key">Semi</span><span class="wc26-stat-val">{row["semi_pct"]:.2f}%</span></div>'
+            f'<div class="wc26-stat"><span class="wc26-stat-key">Quarter</span><span class="wc26-stat-val">{row["quarter_pct"]:.2f}%</span></div>'
+            f'</div>'
+            f'</div>'
+        )
 
-    scroll_nudge = """
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:1.75rem;opacity:0.45;transition:opacity 0.2s;">
-    <span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.5);">Full rankings table below</span>
-    <div style="width:28px;height:28px;border-radius:50%;border:0.5px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;animation:bob 1.8s ease-in-out infinite;">↓</div>
-    </div>
-    <style>@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}</style>
-    """
-    st.markdown(scroll_nudge, unsafe_allow_html=True)
+    cards_html = '<div class="wc26-grid">' + "".join(card_blocks) + "</div>"
 
     scroll_html = """
-    <div class="gna-scroll-nudge">
-        <span class="gna-nudge-label">Full rankings table below</span>
-        <div class="gna-nudge-arrow">↓</div>
+    <div class="wc26-scroll-nudge">
+        <span class="wc26-nudge-label">Full rankings table below</span>
+        <div class="wc26-nudge-arrow">↓</div>
     </div>
     """
-
-    st.markdown(card_css + cards_html + scroll_html, unsafe_allow_html=True)
+    st.markdown(cards_html + scroll_html, unsafe_allow_html=True)
 
     # Full width container below columns
     st.markdown("---")
