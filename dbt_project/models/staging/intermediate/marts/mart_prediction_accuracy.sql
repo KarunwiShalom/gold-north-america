@@ -2,8 +2,16 @@ with predictions as (
     select
         date,
         `group` as group_name,
-        home_team,
-        away_team,
+        case home_team
+            when 'Czech Republic'          then 'Czechia'
+            when 'Bosnia and Herzegovina'  then 'Bosnia-Herzegovina'
+            else home_team
+        end as home_team,
+        case away_team
+            when 'Czech Republic'          then 'Czechia'
+            when 'Bosnia and Herzegovina'  then 'Bosnia-Herzegovina'
+            else away_team
+        end as away_team,
         prob_home_win,
         prob_draw,
         prob_away_win,
@@ -55,7 +63,6 @@ joined as (
     inner join actuals a
         on p.home_team = a.home_team
         and p.away_team = a.away_team
-        and p.date = a.date
 )
 
 select * from joined
