@@ -489,49 +489,41 @@ with tab4:
         avg_brier = round(accuracy_df['brier_score'].mean(), 4)
         matchdays_played = accuracy_df['date'].nunique()
 
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.04); border:0.5px solid rgba(255,255,255,0.08);
-                        border-radius:12px; padding:20px 24px;">
-                <div style="color:rgba(255,255,255,0.4); font-size:0.72rem; font-weight:700;
-                            letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px;">
-                    Matches Tracked</div>
-                <div style="color:#FFFFFF; font-size:1.75rem; font-weight:500;">{total}</div>
+        st.markdown(f"""
+        <div style="background: linear-gradient(90deg, #E63946, #2A9D8F, #457B9D, #6A4C93);
+                    padding: 2px; border-radius: 14px; margin-bottom: 24px;">
+            <div style="background: #0a1628; border-radius: 12px; padding: 28px 32px;">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;">
+                    <div style="padding: 0 28px 0 0; border-right: 0.5px solid rgba(255,255,255,0.08);">
+                        <div style="color:rgba(255,255,255,0.4); font-size:0.72rem; font-weight:700;
+                                    letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px;">
+                            Matches Tracked</div>
+                        <div style="color:#FFFFFF; font-size:1.75rem; font-weight:500;">{total}</div>
+                    </div>
+                    <div style="padding: 0 28px; border-right: 0.5px solid rgba(255,255,255,0.08);">
+                        <div style="color:rgba(255,255,255,0.4); font-size:0.72rem; font-weight:700;
+                                    letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px;">
+                            Correct Outcomes</div>
+                        <div style="color:#f5c518; font-size:1.75rem; font-weight:500;">{accuracy_pct}%</div>
+                    </div>
+                    <div style="padding: 0 28px; border-right: 0.5px solid rgba(255,255,255,0.08);">
+                        <div style="color:rgba(255,255,255,0.4); font-size:0.72rem; font-weight:700;
+                                    letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px;">
+                            Brier Score</div>
+                        <div style="color:#FFFFFF; font-size:1.75rem; font-weight:500;">{avg_brier}</div>
+                        <div style="color:rgba(255,255,255,0.3); font-size:0.72rem; margin-top:4px;">0 = perfect · 0.33 = random</div>
+                    </div>
+                    <div style="padding: 0 0 0 28px;">
+                        <div style="color:rgba(255,255,255,0.4); font-size:0.72rem; font-weight:700;
+                                    letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px;">
+                            Matchdays</div>
+                        <div style="color:#FFFFFF; font-size:1.75rem; font-weight:500;">{matchdays_played}</div>
+                    </div>
+                </div>
             </div>
-            """, unsafe_allow_html=True)
-        with col2:
-            st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.04); border:0.5px solid rgba(255,255,255,0.08);
-                        border-radius:12px; padding:20px 24px;">
-                <div style="color:rgba(255,255,255,0.4); font-size:0.72rem; font-weight:700;
-                            letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px;">
-                    Correct Outcomes</div>
-                <div style="color:#f5c518; font-size:1.75rem; font-weight:500;">{accuracy_pct}%</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with col3:
-            st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.04); border:0.5px solid rgba(255,255,255,0.08);
-                        border-radius:12px; padding:20px 24px;">
-                <div style="color:rgba(255,255,255,0.4); font-size:0.72rem; font-weight:700;
-                            letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px;">
-                    Brier Score</div>
-                <div style="color:#FFFFFF; font-size:1.75rem; font-weight:500;">{avg_brier}</div>
-                <div style="color:rgba(255,255,255,0.3); font-size:0.72rem; margin-top:4px;">0 = perfect · 0.33 = random</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with col4:
-            st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.04); border:0.5px solid rgba(255,255,255,0.08);
-                        border-radius:12px; padding:20px 24px;">
-                <div style="color:rgba(255,255,255,0.4); font-size:0.72rem; font-weight:700;
-                            letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px;">
-                    Matchdays</div>
-                <div style="color:#FFFFFF; font-size:1.75rem; font-weight:500;">{matchdays_played}</div>
-            </div>
-            """, unsafe_allow_html=True)
-            
+        </div>
+        """, unsafe_allow_html=True)
+
         st.markdown("---")
 
         # ── Match by match table ──────────────────────────────────────────────
