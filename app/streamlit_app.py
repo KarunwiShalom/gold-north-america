@@ -555,7 +555,7 @@ with tab4:
                 'predicted_outcome': 'Predicted',
                 'actual_outcome': 'Actual',
                 'brier_score': 'Brier'
-            }),
+            }).style.format({'Brier': '{:.4f}'}),
             width='stretch',
             height=500
         )

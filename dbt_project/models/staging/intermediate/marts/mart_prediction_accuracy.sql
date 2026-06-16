@@ -41,7 +41,7 @@ actuals as (
 joined as (
     select
         p.date,
-        p.group_name,
+        COALESCE(NULLIF(p.group_name, 'Unknown'), a.group_name) as group_name,
         p.home_team,
         p.away_team,
         p.prob_home_win,
