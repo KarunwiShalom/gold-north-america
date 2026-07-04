@@ -73,6 +73,8 @@ def main():
 
     print(f"Found {len(knockout_df)} knockout matches. Generating predictions...")
     rows = []
+    knockout_df = knockout_df[knockout_df['home_team'].notna() & knockout_df['away_team'].notna()]
+    print(f"After filtering nulls: {len(knockout_df)} matches to predict")
     for _, match in knockout_df.iterrows():
         home, away = match['home_team'], match['away_team']
         ha, hd, hm = get_team_strength(fixtures_df, home)
