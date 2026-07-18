@@ -23,6 +23,20 @@ st.set_page_config(
 with open("app/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+.stTabs [data-baseweb="tab-list"] {
+    gap: 8px;
+    width: 100%;
+}
+.stTabs [data-baseweb="tab"] {
+    flex: 1;
+    justify-content: center;
+    padding: 8px 16px;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ── Connect to BigQuery ───────────────────────────────────────────────────────
 @st.cache_resource
 def get_client():
